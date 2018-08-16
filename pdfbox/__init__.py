@@ -14,7 +14,7 @@ import sarge
 
 pdfbox_version = '2.0.11'
 pdfbox_url = 'https://www.apache.org/dist/pdfbox/{version}/pdfbox-app-{version}.jar'.format(version=pdfbox_version)
-sha512_url = 'https://www.apache.org/dist/pdfbox/{version}/pdfbox-app-{version}.jar.sha512'.format(version=pdfbox_version)
+
 
 class PDFBox(object):
     """
@@ -28,12 +28,7 @@ class PDFBox(object):
         Extract all text from PDF file.
     """
 
-    def _verify_sha512(self, data, digest):
-        """
-        Verify SHA512 checksum.
-        """
 
-        return hashlib.sha512(data).hexdigest() == digest
 
     def _get_pdfbox_path(self):
         """
@@ -65,15 +60,7 @@ class PDFBox(object):
                 with open(pdfbox_path, 'wb') as f:
                     f.write(data)
 
-            r = urllib.request.urlopen(sha512_url)
-            encoding = r.headers.get_content_charset('utf-8')
-            try:
-                sha512 = r.read().decode(encoding).strip()
-            except:
-                raise RuntimeError('error retrieving sha512sum')
-            else:
-                if not self._verify_sha512(data, sha512):
-                    raise RuntimeError('failed to verify sha512sum')
+
 
         return pdfbox_path
 
